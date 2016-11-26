@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.socket.io/socket.io-1.3.5.js"></script>
+
+<link href="style.css" rel="stylesheet">
+
+<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+
+ <!-- jQuery (necessary for Flat UI's JavaScript plugins) -->
+  <!-- <script src="js/vendor/jquery-3.1.1.js"></script>-->
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/vendor/video.js"></script>
+    <script src="js/flat-ui.min.js"></script>
+   
+   
+   <!-- Loading Flat UI -->
+    <link href="css/flat-ui.min.css" rel="stylesheet"> 
+	<link href="css/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<script>
+$(document).ready(function() {  
+	
+    //LeftFw
+    $( "#leftFw" ).on( "vmousedown", function() {
+      socket.emit('publish', {topic:"direction",payload:"leftFw"});
+    });
+     $( "#leftFw" ).on( "vmouseup", function() {
+      socket.emit('publish', {topic:"direction",payload:"stop"});
+    });
+
+    //LeftBk
+
+    	$( "#leftBk" ).on( "vmousedown", function() {
+      socket.emit('publish', {topic:"direction",payload:"leftBk"});
+    });
+
+     $( "#leftBk" ).on( "vmouseup", function() {
+      socket.emit('publish', {topic:"direction",payload:"stop"});
+    });
+
+
+    //rightFw
+    $( "#rightFw" ).on( "vmousedown", function() {
+      socket.emit('publish', {topic:"direction",payload:"rightFw"});
+    });
+     $( "#rightFw" ).on( "vmouseup", function() {
+      socket.emit('publish', {topic:"direction",payload:"stop"});
+    });
+
+    //rightBk
+
+      $( "#rightBk" ).on( "vmousedown", function() {
+      socket.emit('publish', {topic:"direction",payload:"rightBk"});
+    });
+
+     $( "#rightBk" ).on( "vmouseup", function() {
+      socket.emit('publish', {topic:"direction",payload:"stop"});
+    });
+
+
+    //baseCw
+    $( "#baseCw" ).on( "vmousedown", function() {
+      socket.emit('publish', {topic:"direction",payload:"baseCw"});
+    });
+     $( "#baseCw" ).on( "vmouseup", function() {
+      socket.emit('publish', {topic:"direction",payload:"stop"});
+    });
+
+    //baseCcw
+
+      $( "#baseCcw" ).on( "vmousedown", function() {
+      socket.emit('publish', {topic:"direction",payload:"baseCcw"});
+    });
+
+     $( "#baseCcw" ).on( "vmouseup", function() {
+      socket.emit('publish', {topic:"direction",payload:"stop"});
+    });
+
+	
+	
+	$('#speedSlider').on('change', function(){
+    	//$('#speed').val($('#speedSlider').val());
+    	var speed=$('#speedSlider').val();
+	    socket.emit('publish', {topic:"speed",payload:speed});
+	});
+
+/*	$('#chance').on('keyup', function(){
+    $('#chanceSlider').val($('#chance').val());
+	});
+	*/
+	$('#precisionSlider').on('change', function(){
+    	//$('#chance').val($('#chanceSlider').val());
+    	var precision=$('#precisionSlider').val();
+	    socket.emit('publish', {topic:"precision",payload:precision});
+	});
+
+/*	$('#chance').on('keyup', function(){
+    $('#chanceSlider').val($('#chance').val());
+	});*/
+
+
+/*	$('#chanceSlider').slider({
+	formatter: function(value) {
+		return 'Current value: ' + value;
+	}
+	});
+*/
+	
+});
+
+</script>
+
+<script>
+    var socket = io.connect('homenetwork.webhop.me:5000');
+    socket.on('connect', function () {
+      socket.on('mqtt', function (msg) {
+        console.log(msg.topic+' '+msg.payload)
+      });
+      socket.emit('subscribe',{topic:'direction'});
+      socket.emit('subscribe',{topic:'speed'});
+      socket.emit('subscribe',{topic:'precision'});
+    });
+</script>
+
+
+</head>
+
+<body>
+
+
+<div class="jumbotron">
+        
+        <div class="row">
+          <div class="col-md-6">
+            <img src="images/robot_arm2.jpg" class="img-responsive" alt="Responsive image">
+          </div>    
+          <div class="col-md-6">
+            <h1>Lift</h1>
+            <p>the robotic arm using MQTT</p>
+          </div>
+        </div>
+     
+</div>
+
+<div class="wrapper">
+  
+  <div class="row">
+    <h1>Settings</h1>
+  </div>
+  <div class="row">
+    <div class="col-md-6">
+      <div>
+    	<h3>Precision</h3>
+      	<input id="precisionSlider" data-slider-id='ex1Slider' type="text" data-slider-min="1" data-slider-max="500" data-slider-step="1" data-slider-value="1"/>
+      </div>
+    </div>
+   
+   <div class="col-md-6">
+      <div>
+    	<h3>Speed</h3>
+       	<input id="speedSlider" data-slider-id='ex2Slider' type="text" data-slider-min="1" data-slider-max="10" data-slider-step="1" data-slider-value="20"/>
+      </div>
+    </div>
+
+  </div>
+  
+  <div class="row">
+    <h1>General movements</h1>
+  </div>
+  <div class="row">
+    <div class="container-fluid">
+    
+      <div class="col-md-4">
+        <h2>Up/Down</h2>
+        <button type="button" id="leftFw" class="btn btn-lg btn-inverse" >LeftFw</button>
+        <button type="button" id="leftBk" class="btn btn-lg btn-default">LeftBk</button>
+      </div>
+    
+      <div class="col-md-4">
+          <h2>Forward/Backward</h2>
+          <button type="button" id="rightFw" class="btn btn-lg btn-default" >RightFw</button>
+          <button type="button" id="rightBk" class="btn btn-lg btn-default">RightBk</button>
+      </div>
+    
+      <div class="col-md-4">
+        <h2>Rotate base</h2>
+        <button type="button" id="baseCw" class="btn btn-lg btn-default" >BaseCw</button>
+        <button type="button" id="baseCcw" class="btn btn-lg btn-default">BaseCcw</button>
+      </div>
+    
+    </div>
+  </div>
+ 
+</div>   
+
+ 
+     <footer class="bs-docs-footer"> 
+     	<div>
+     		
+     		<div class="row"> 
+     			<div class="col-md-4">
+     				<ul class="bs-docs-footer-links list-unstyled"> 
+     					<li><a href="https://github.com/twbs/bootstrap">GitHub</a></li> 
+     					<li><a href="https://twitter.com/getbootstrap">Twitter</a></li> 
+     					<li><a href="../getting-started/#examples">Examples</a></li> 
+     					<li><a href="../about/">About</a></li> 
+     				</ul> 
+     			</div>
+     			<div class="col-md-8">
+     				<p>Designed and built with all the love in the world by <a href="https://github.com/eumb" target="_blank">@eumb</a> 
+     				<p>Code licensed <a href="https://github.com/twbs/bootstrap/blob/master/LICENSE" target="_blank" rel="license">MIT</a>, docs <a href="https://creativecommons.org/licenses/by/3.0/" target="_blank" rel="license">CC BY 3.0</a>.</p> 
+     				
+     			</div>
+     		</div>
+     		
+     	</div> 
+     </footer> 
+  
+
+</body>
+</html>
